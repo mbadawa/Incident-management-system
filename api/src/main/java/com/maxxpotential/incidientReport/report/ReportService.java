@@ -15,7 +15,12 @@ public class ReportService {
 
 
     public void createReport(@RequestBody List<Report> report) {
-        reportRepository.saveAll(report);
+        if (report.size() > 0) {
+            reportRepository.saveAll(report);
+        }
+        else {
+            throw new RuntimeException("Please make sure all the fields are filled out!");
+        }
     }
 
     public void updateReport(long id, Report report) {
@@ -33,7 +38,11 @@ public class ReportService {
     }
 
     public List<Report> getAllReports() {
-      return (List<Report>) reportRepository.findAll();
+        // checks if there are any reports in the database
+        if (reportRepository.count() > 0) {
+            return (List<Report>) reportRepository.findAll();
+        }
+        throw new RuntimeException("There are no reports in the database!");
     }
 
     public Report getReportById(long id) {
@@ -41,5 +50,10 @@ public class ReportService {
             return reportRepository.findById(id).get();
         }
         throw new RuntimeException("Report with the id of " + id + " does not exist!");
+    }
+
+
+    public List<Report> getReportByMonth() {
+        return (List<Report>) reportRepository.findAll();
     }
 }
